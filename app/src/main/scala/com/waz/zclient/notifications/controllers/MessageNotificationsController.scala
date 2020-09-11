@@ -97,7 +97,7 @@ class MessageNotificationsController(bundleEnabled: Boolean = Build.VERSION.SDK_
   with those notifications. This is separate from removing notifications from the storage and may
   sometimes be inconsistent (notifications in the tray may stay longer than in the storage).
    */
-  Signal(selfId, notificationsSourceVisible).onUi {
+  Signal.zip(selfId, notificationsSourceVisible).onUi {
     case (Some(selfUserId), sources) =>
       val notIds = sources.getOrElse(selfUserId, Set.empty).map(toNotificationConvId(selfUserId, _))
       if (notIds.nonEmpty) notificationManager.cancelNotifications(notIds)

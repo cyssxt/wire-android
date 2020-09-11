@@ -521,7 +521,7 @@ class CachedStorageImpl[K, V <: Identifiable[K]](cache: LruCache[K, Option[V]], 
 
   // signal with all data
   override lazy val contents: Signal[Map[K, V]] = {
-    val changesStream = EventStream.union[Seq[ContentChange[K, V]]](
+    val changesStream = EventStream.zip[Seq[ContentChange[K, V]]](
       onAdded.map(_.map(d => Added(d.id, d))),
       onUpdated.map(_.map { case (prv, curr) => Updated(prv.id, prv, curr) }),
       onDeleted.map(_.map(Removed(_)))

@@ -268,8 +268,8 @@ case class DeviceDetailsViewController(view: DeviceDetailsView, clientId: Client
     } yield ()
   }
 
-  private def showRemoveDeviceDialog(error: Option[String] = None): Unit = {
-    Signal(accounts.isActiveAccountSSO, model).head.foreach { case (isSSO, name) =>
+  private def showRemoveDeviceDialog(error: Option[String] = None): Unit =
+    Signal.zip(accounts.isActiveAccountSSO, model).head.foreach { case (isSSO, name) =>
       val fragment = returning(RemoveDeviceDialog.newInstance(name, error, isSSO))(_.onDelete(removeDevice))
       context.asInstanceOf[BaseActivity]
         .getSupportFragmentManager
@@ -279,5 +279,4 @@ case class DeviceDetailsViewController(view: DeviceDetailsView, clientId: Client
         .addToBackStack(RemoveDeviceDialog.FragmentTag)
         .commit
     } (Threading.Ui)
-  }
 }
